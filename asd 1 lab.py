@@ -1,6 +1,7 @@
 class Stack:
     def __init__(self):
         self.items = []
+        print("Стек создан")
 
     def push(self, item):
         self.items.append(item)
@@ -21,14 +22,22 @@ class Stack:
     def size(self):
         return len(self.items)
 
+    def __del__(self):
+        self.items.clear()
+        print("Стек удален")
+
 
 class Operation:
     def __init__(self, symbol, func):
         self.symbol = symbol
         self.func = func
+        print(f"Операция '{symbol}' создана")
 
     def execute(self, a, b):
         return self.func(a, b)
+
+    def __del__(self):
+        print(f"Операция '{self.symbol}' удалена")
 
 
 class Addition(Operation):
@@ -71,7 +80,11 @@ def evaluate_polish_notation(expression):
         else:
             raise ValueError(f"Неизвестный токен: {token}")
     
-    return stack.pop()
+    result = stack.pop()
+    del stack
+    for op in operations.values():
+        del op
+    return result
 
 # Пример использования
 expression = "3 4 + 5 2 - * 7 /"
